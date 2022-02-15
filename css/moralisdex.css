@@ -1,0 +1,47 @@
+
+body {
+    /*background-color: rgb(148, 210, 189);*/
+    
+    background-image: linear-gradient(to bottom right, rgb(11, 174, 45), rgb(229, 236, 233));
+}
+
+
+
+.error {
+    color: darkred;
+}
+
+#nav-header {
+    color: rgb(155, 34, 38);
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 17px;
+    letter-spacing: 0.4px;
+    word-spacing: 0.4px;
+    color: #000000;
+    font-weight: normal;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;  
+    align-items: center;  
+}
+
+div.hamburger-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+ul.menu__box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 2px;
+    padding: 2px;  
+    border-style:none;
+}
