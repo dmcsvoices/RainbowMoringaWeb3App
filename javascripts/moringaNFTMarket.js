@@ -82,8 +82,27 @@ async function renderNFTList(options){
             let tokenArray = tokenIDs.result;
             console.log(tokenArray);
 
-            let NFTWithMetadata = (options.address === TARSIER_NFT_CONTRACT_ADDRESS) ? await fetchTarsierNFTMetadata(tokenArray) : await fetchProductNFTMetadata(tokenArray);
+            let NFTWithMetadata;// = (options.address === TARSIER_NFT_CONTRACT_ADDRESS) ? await fetchTarsierNFTMetadata(tokenArray) : await fetchProductNFTMetadata(tokenArray);
             
+            if (options.address.toLowerCase().localeCompare(TARSIER_NFT_CONTRACT_ADDRESS.toLowerCase()) === 0) {
+              NFTWithMetadata = await fetchTarsierNFTMetadata(tokenArray);
+            }
+          
+            if (options.address.toLowerCase().localeCompare(PRODUCT_NFT_CONTRACT_ADDRESS.toLowerCase()) === 0) {
+              NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
+            }
+          
+            if (options.address.toLowerCase().localeCompare(PRODUCT_NFT_CONTRACT_ADDRESS_2.toLowerCase()) === 0) {
+              NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
+            }
+          
+            if (options.address.toLowerCase().localeCompare(CONTRACT_NFT_UNKNOWN.toLowerCase()) === 0) {
+              NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
+            }
+          
+
+
+
             
             for (let index = 0; index< NFTWithMetadata.length; index++){
                 //console.log(thisToken);
