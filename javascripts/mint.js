@@ -36,7 +36,9 @@ async function init(){
     console.log(nftAddress);
     
     document.getElementById('token_id_input').value = nftId;
-    document.getElementById('address_input').value = Accounts[0];
+    document.getElementById('sender_address_input').value = Accounts[0];
+    document.getElementById('token_address_input').value = nftAddress; 
+    document.getElementById('receiver_address_input').value = "";
     document.querySelector('#submit_mint_eth').addEventListener('click', mint);
     document.querySelector('#submit_mint_poly').addEventListener('click', mintPoly);
     document.querySelector('#submit_transfer').addEventListener('click', transfer);
@@ -76,7 +78,7 @@ async function mintPoly(){
     console.log(accounts[0]);
 
     let tokenId = parseInt(document.querySelector("#token_id_input").value);
-    let address = document.querySelector("#address_input").value;
+    let address = document.querySelector("#sender_address_input").value;
     let tokenAddress = nftAddress;
     let amount = parseInt(document.querySelector("#amount_input").value);
     
@@ -92,19 +94,19 @@ async function mintPoly(){
 }
 
 async function transfer(){
-    let tokenId = parseInt(document.querySelector("#token_id_input").value);
-    let address = document.querySelector("#address_input").value;
+    let tokenId = document.querySelector("#token_id_input").value;
+    let address = document.getElementById('receiver_address_input').value;
     let amount = parseInt(document.querySelector("#amount_input").value);
 
     const options = { type: "erc1155",
         receiver: address,
-        contract_address: PRODUCT_NFT_CONTRACT_ADDRESS, 
+        contract_address: nftAddress, 
         token_id: tokenId,
         amount : amount
     }
-
-    //let result = await Moralis.transfer(options);    
     console.log(options);
+    let result = await Moralis.transfer(options);    
+    
 
 }
 

@@ -1,3 +1,13 @@
+//var express = require('express');
+
+const OPTIONS_PRODUCT = { address: "0x2c162dd5d99e93b16c1c9cd17fcb9bd246328553", chain :"rinkeby"};
+const OPTIONS_PRODUCT_POLYGON_MUMBAI = { address: "0xd6f28235889057cdfc6c7853e207a4fdd3a8afd6", chain :"mumbai"};
+const OPTIONS_TARSIER = { address:"0xf3a1473abc511b34db62311f0f83ebf5e83c5eaf", chain: "rinkeby"};
+
+const PRODUCT_NFT_CONTRACT_ADDRESS = "0x2c162dd5d99e93b16c1c9cd17fcb9bd246328553";
+const TARSIER_NFT_CONTRACT_ADDRESS = "0xf3a1473abc511b34db62311f0f83ebf5e83c5eaf";
+const PRODUCT_NFT_CONTRACT_ADDRESS_2 = "0x0A70442b89Bf4e551bff041B133649ffCd5981aa";
+const CONTRACT_NFT_UNKNOWN = "0x421DaDA0810C7Fb13d8348108A01C841e49F28D1";
 
 
 
@@ -239,12 +249,9 @@ async function getTokenMetadataFromURI(token_uri) {
     catch (e) {console.log(e);}  
 }
 
-
-
-
-async function fetchNFTMetadata(NFTs){
-  console.log("In fetchNFTMeta");
-  //console.log(NFTs);
+async function fetchTarsierNFTMetadata(NFTs){
+  //console.log("In fetchTarsierNFTMeta",NFTs);
+ 
   let promises = [];
 
   for (let i = 0; i < NFTs.length; i++) { 
@@ -252,7 +259,7 @@ async function fetchNFTMetadata(NFTs){
       let nft = NFTs[i];
       let id = nft.token_id;
       //call Moralis cloud function  -> Static JSON file
-     promises.push(fetch("https://dkuhvl2devse.usemoralis.com:2053/server/functions/getNFTData?_ApplicationId=HgnlNM0JEX6EYDXfJP7aXqio5AJ1VSyopJ7oeIEp&nftId=" + id)
+     promises.push(fetch(TARSIER_METADATA_QUERY + id)
           .then(res => res.json())
           .then(res => JSON.parse(res.result))
           .then(res => {nft.metadata = res})
@@ -261,6 +268,89 @@ async function fetchNFTMetadata(NFTs){
   return Promise.all(promises);
 }
 
+async function fetchProductNFTMetadata(NFTs){
+ //console.log("In fetchProductNFTMeta", NFTs);
+  
+  let promises = [];
+
+  for (let i = 0; i < NFTs.length; i++) { 
+  //    console.log("in for loop");
+      let nft = NFTs[i];
+      let id = nft.token_id;
+      //call Moralis cloud function  -> Static JSON file
+     promises.push(fetch(PRODUCT_METADATA_QUERY + id)
+          .then(res => res.json())
+          .then(res => JSON.parse(res.result))
+          .then(res => {nft.metadata = res})
+          .then(() => {return nft;}))
+  }
+  return Promise.all(promises);
+}
+
+
+async function renderNFT(_tokenAddress,_tokenId,_chain){
+
+  console.log("in renderNFTList",_tokenAddress,_tokenId,_chain);
+  let thisTokenId = parseInt(_tokenId);
+  let options = {address: _tokenAddress,  chain: _chain};
+  let tokenIDs = await Moralis.Web3API.token.getAllTokenIds(options);
+  let tokenArray = tokenIDs.result;
+
+  if (_tokenAddress.toLowerCase().localeCompare(TARSIER_NFT_CONTRACT_ADDRESS.toLowerCase()) === 0) {
+    NFTWithMetadata = await fetchTarsierNFTMetadata(tokenArray);
+  }
+
+  if (_tokenAddress.toLowerCase().localeCompare(PRODUCT_NFT_CONTRACT_ADDRESS.toLowerCase()) === 0) {
+    NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
+  }
+
+  if (_tokenAddress.toLowerCase().localeCompare(PRODUCT_NFT_CONTRACT_ADDRESS_2.toLowerCase()) === 0) {
+    NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
+  }
+
+  if (_tokenAddress.toLowerCase().localeCompare(CONTRACT_NFT_UNKNOWN.toLowerCase()) === 0) {
+    NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
+  }
+
+
+  if (NFTWithMetadata.length === 1) {
+    $rinkeby_nftListTBody.innerHTML +=  `
+          <div class="card">
+              <img class="card-img-top" src=${NFTWithMetadata[0].metadata.image}>
+              <div class="card-body">
+                  
+                  <h5 class="card-title">${NFTWithMetadata[0].metadata.name}</h5>
+                  <h6 class="card-text">Description: ${NFTWithMetadata[0].metadata.description}</h6>
+                  <h6 class="card-text">Network: ${options.chain}</h6>
+                  <h6 class="card-text">Token Address: ${options.address}</h6>
+                  <h6 class="card-text">Amount: ${NFTWithMetadata[0].amount}</h6>
+                  
+              </div>
+          </div>   
+          <br>    
+          `;
+  } else {  
+    for (let index = 0; index< NFTWithMetadata.length; index++){
+      if (parseInt(NFTWithMetadata[index].token_id) === thisTokenId) {
+        $rinkeby_nftListTBody.innerHTML +=  `
+          <div class="card">
+              <img class="card-img-top" src=${NFTWithMetadata[index].metadata.image}>
+              <div class="card-body">
+                  
+                  <h5 class="card-title">${NFTWithMetadata[index].metadata.name}</h5>
+                  <h6 class="card-text">Description: ${NFTWithMetadata[index].metadata.description}</h6>
+                  <h6 class="card-text">Network: ${options.chain}</h6>
+                  <h6 class="card-text">Token Address: ${options.address}</h6>
+                  <h6 class="card-text">Amount: ${NFTWithMetadata[index].amount}</h6>
+                  
+              </div>
+          </div>   
+          <br>    
+          `;
+      }
+    }
+  }
+}
 
 
 
@@ -277,45 +367,25 @@ async function fetchNFTMetadata(NFTs){
         
 /*Try to get the the NFTs*/
       try { 
-        
-        //the following code gets Metadata tokens in my contract at the below address on the rikeby network
-        //const nftProductOptions = { address: "0x2c162dd5d99e93b16c1c9cd17fcb9bd246328553", chain :"rinkeby"};
-        //const nftTarsieroptions = { address:"0xf3a1473abc511b34db62311f0f83ebf5e83c5eaf", chain: "rinkeby"};
-        //let MoralisTarsierNFTs = await Moralis.Web3API.token.getAllTokenIds(nftTarsieroptions);
-        //let MoralisProductNFTs = await Moralis.Web3API.token.getAllTokenIds(nftProductOptions);
-        //console.log(MoralisTarsierNFTs);
-        //let MoralisTarsierNFTWithMetadata = await fetchNFTMetadata(MoralisTarsierNFTs.result);
-        //let MoralisProductNFTWithMetadata = await fetchNFTMetadata(MoralisProductNFTs.result);
-        //console.log(MoralisTarsierNFTWithMetadata[0]);
-        //console.log(MoralisProductNFTWithMetadata[0]);
+
         
         // get testnet NFTs for user
-        console.log("getting rinkeby testnet nfts");
+        
         const testnetNFTs = await Moralis.Web3API.account.getNFTs({ chain: 'rinkeby' });
         let testnetNFTsMetaDataArray = testnetNFTs.result;
-        console.log(testnetNFTsMetaDataArray);
+        console.log("Getstats: getting rinkeby testnet nfts",testnetNFTsMetaDataArray);
         
         for (let i = 0; i < testnetNFTsMetaDataArray.length; i++) {
-            let meta = JSON.parse(testnetNFTsMetaDataArray[i].metadata);
-            $rinkeby_nftListTBody.innerHTML += `
-            <div class="card">
-              <div class="card-body">
-                <img src=${meta.image} class="card-img-top"> 
-                <h5 class="card-title">${meta.name}</h5>
-                <h6 class="card-text">Description:${meta.description}</h6>
-              </div>
-            </div>    
-            <br>   
-            `;
+            renderNFT(testnetNFTsMetaDataArray[i].token_address,testnetNFTsMetaDataArray[i].token_id,'rinkeby');
           }
 
 
         //get mumbai testnet NFTs for user
 
-        console.log("getting mumbai testnet nfts");
+       
         const mumbaitestnetNFTs = await Moralis.Web3API.account.getNFTs({ chain: 'mumbai' });
         let mumbaitestnetNFTsMetaDataArray = mumbaitestnetNFTs.result;
-        console.log(testnetNFTsMetaDataArray);
+        console.log("getting mumbai testnet nfts", mumbaitestnetNFTsMetaDataArray);
         
         for (let i = 0; i < mumbaitestnetNFTsMetaDataArray.length; i++) {
             let meta = JSON.parse(mumbaitestnetNFTsMetaDataArray[i].metadata);
@@ -349,39 +419,9 @@ async function fetchNFTMetadata(NFTs){
         </div>       
         <br>
         `;
-        s}
+        }
 
-          /*old code below
-                  //the following code was written to get the 
-                  const MainNetOptions = { chain: "eth"};
-                  const userEthNFTs = await Moralis.Web3API.account.getNFTs(MainNetOptions);
-                  //console.log(userEthNFTs[0]);
-                  
-                  
-                  console.log(Object.values(userEthNFTs));
-                  console.log(Object.values(userEthNFTs)[3][0]);
-                  const nftTokenAddress = Object.values(userEthNFTs)[3][0].token_address;
-                  const nftMetadata = Object.values(userEthNFTs)[3][0].metadata;
-                  const nfttokenuri = Object.values(userEthNFTs)[3][0].token_uri;
-                  const nftURL = await getOpenSeaImageURL(nfttokenuri);
-                  const nftImg = await getNftImage(nftURL);
 
-                  //console.log(JSON.parse(nftMetadata).external_link);
-                  // console.log(Moralis.Units.FromWei(nativeBalances.balance, 18));
-                  //console.log(nftURL);
-                  //console.log(nftImg);
-                  const testnetNFTMetadata = getTokenMetadataFromURI(nfttokenuri);
-                  console.log(testnetNFTMetadata);
-
-                  $mainnet_nftListTBody.innerHTML = `
-                  <tr>
-                  <td>1</td>
-                  <td>${nftTokenAddress}</td>
-                  <td>${JSON.parse(nftMetadata).name}</td>
-                  <td><img src=${nftURL}></td>
-                  </tr>       
-                  `;
-          */
       } catch (e) {console.log(e);}  
 
 /*Try to get the NativeBalance on the main chain*/
