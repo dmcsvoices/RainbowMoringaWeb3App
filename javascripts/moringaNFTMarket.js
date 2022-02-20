@@ -101,13 +101,23 @@ async function renderNFTList(options){
             }
           
 
+            const nftOwners = await Moralis.Web3API.token.getNFTOwners(options);
+            console.log("Address nftowner",options.address, nftOwners );
 
+            let liString;
 
             
             for (let index = 0; index< NFTWithMetadata.length; index++){
                 //console.log(thisToken);
+                liString = "";
                 console.log(NFTWithMetadata[index].token_id);
-                
+                for (let ownerIndex = 0; ownerIndex< nftOwners.total; ownerIndex++) {
+                  if (parseInt(nftOwners.result[ownerIndex].token_id) === parseInt(NFTWithMetadata[index].token_id)) {
+                    liString += `
+                      <li class="list-group-item">${nftOwners.result[ownerIndex].owner_of}</li>
+                    `;
+                }
+              }
                 console.log(NFTWithMetadata);
 
                 let htmlString = `
@@ -121,8 +131,11 @@ async function renderNFTList(options){
                         <h6 class="card-text">Token Address: ${options.address}</h6>
                         <h6 class="card-text">Token Id: ${NFTWithMetadata[index].token_id}</h6>
                         <h6 class="card-text">Amount: ${NFTWithMetadata[index].amount}</h6>
+                        <h6 class="card-text">Owners:</h6>
+                        <ul class="list-grouplist-group-flush">${liString}
+                        </ul>
                         <a href="/mint.html?nftAddress=${options.address}&nftId=${NFTWithMetadata[index].token_id}" class="btn btn-sm btn-outline-primary">Mint</a>
-                        
+
                     </div>
                 </div>   
                 <br>    
