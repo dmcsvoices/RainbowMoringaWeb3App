@@ -119,6 +119,7 @@ async function renderNFTList(options){
                         <h6 class="card-text">Description: ${NFTWithMetadata[index].metadata.description}</h6>
                         <h6 class="card-text">Network: ${options.chain}</h6>
                         <h6 class="card-text">Token Address: ${options.address}</h6>
+                        <h6 class="card-text">Token Id: ${NFTWithMetadata[index].token_id}</h6>
                         <h6 class="card-text">Amount: ${NFTWithMetadata[index].amount}</h6>
                         <a href="/mint.html?nftAddress=${options.address}&nftId=${NFTWithMetadata[index].token_id}" class="btn btn-sm btn-outline-primary">Mint</a>
                         
