@@ -315,7 +315,8 @@ async function renderNFT(_tokenAddress,_tokenId,_chain){
 
   if (NFTWithMetadata.length === 1) {
     $rinkeby_nftListTBody.innerHTML +=  `
-          <div class="card">
+        <div class="col-sm-8">  
+          <div class="card mt-4">
               <img class="card-img-top" src=${NFTWithMetadata[0].metadata.image}>
               <div class="card-body">
                   
@@ -327,14 +328,15 @@ async function renderNFT(_tokenAddress,_tokenId,_chain){
                   <h6 class="card-text">Amount: ${NFTWithMetadata[0].amount}</h6>
                   
               </div>
-          </div>   
-          <br>    
+          </div>
+        </div>         
           `;
   } else {  
     for (let index = 0; index< NFTWithMetadata.length; index++){
       if (parseInt(NFTWithMetadata[index].token_id) === thisTokenId) {
         $rinkeby_nftListTBody.innerHTML +=  `
-          <div class="card">
+        <div class="col-sm-8">
+           <div class="card mt-4">
               <img class="card-img-top" src=${NFTWithMetadata[index].metadata.image}>
               <div class="card-body">
                   
@@ -347,7 +349,7 @@ async function renderNFT(_tokenAddress,_tokenId,_chain){
                   
               </div>
           </div>   
-          <br>    
+        </div>    
           `;
       }
     }
@@ -392,14 +394,15 @@ async function renderNFT(_tokenAddress,_tokenId,_chain){
         for (let i = 0; i < mumbaitestnetNFTsMetaDataArray.length; i++) {
             let meta = JSON.parse(mumbaitestnetNFTsMetaDataArray[i].metadata);
             $mumbai_nftListTBody.innerHTML += `
-            <div class="card">
-              <div class="card-body">
-                <img src=${meta.image} class="card-img-top"> 
-                <h5 class="card-title">${meta.name}</h5>
-                <h6 class="card-text">Description:${meta.description}</h6>
-              </div>
-            </div>    
-            <br>   
+            <div class="col-sm-8">
+              <div class="card mt-4">
+                <div class="card-body">
+                  <img src=${meta.image} class="card-img-top"> 
+                  <h5 class="card-title">${meta.name}</h5>
+                  <h6 class="card-text">Description:${meta.description}</h6>
+                </div>
+              </div>    
+            </div>   
             `;
           }
 
@@ -412,14 +415,15 @@ async function renderNFT(_tokenAddress,_tokenId,_chain){
         for (let i = 0; i < mainnetNFTsMetaDataArray.length; i++) {
           let meta = JSON.parse(mainnetNFTsMetaDataArray[i].metadata);
           $mainnet_nftListTBody.innerHTML += `
-          <div class="card">
-          <div class="card-body">
-            <img src=${meta.image} class="card-img-top"> 
-            <h5 class="card-title">${meta.name}</h5>
-            <h6 class="card-text">Description:${meta.description}</h6>
+          <div class="col-sm-8">
+            <div class="card mt-4">
+              <div class="card-body">
+                <img src=${meta.image} class="card-img-top"> 
+                <h5 class="card-title">${meta.name}</h5>
+                <h6 class="card-text">Description:${meta.description}</h6>
+              </div>
+            </div>       
           </div>
-        </div>       
-        <br>
         `;
         }
 

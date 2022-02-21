@@ -114,28 +114,26 @@ async function renderNFTList(options){
                 for (let ownerIndex = 0; ownerIndex< nftOwners.total; ownerIndex++) {
                   if (parseInt(nftOwners.result[ownerIndex].token_id) === parseInt(NFTWithMetadata[index].token_id)) {
                     liString += `
-                      <li class="list-group-item">${nftOwners.result[ownerIndex].owner_of}</li>
+                      <li class="list-group-item"><em>${nftOwners.result[ownerIndex].owner_of}</em></li>
                     `;
                 }
               }
                 console.log(NFTWithMetadata);
 
                 let htmlString = `
-                <div class="card">
+                <div class="card mt-4">
                     <img class="card-img-top" src=${NFTWithMetadata[index].metadata.image}>
-                    <div class="card-body">
-                        
+                    <div class="card-body">                        
                         <h5 class="card-title">${NFTWithMetadata[index].metadata.name}</h5>
-                        <h6 class="card-text">Description: ${NFTWithMetadata[index].metadata.description}</h6>
-                        <h6 class="card-text">Network: ${options.chain}</h6>
-                        <h6 class="card-text">Token Address: ${options.address}</h6>
-                        <h6 class="card-text">Token Id: ${NFTWithMetadata[index].token_id}</h6>
-                        <h6 class="card-text">Amount: ${NFTWithMetadata[index].amount}</h6>
+                        <h6 class="card-text">Description:<em> ${NFTWithMetadata[index].metadata.description}</em></h6>
+                        <h6 class="card-text">Network:<em> ${options.chain}</em></h6>
+                        <h6 class="card-text">Token Address:<em> ${options.address}</em></h6>
+                        <h6 class="card-text">Token Id:<em> ${NFTWithMetadata[index].token_id}</em></h6>
+                        <h6 class="card-text">Amount:<em> ${NFTWithMetadata[index].amount}</em></h6>
                         <h6 class="card-text">Owners:</h6>
                         <ul class="list-grouplist-group-flush">${liString}
                         </ul>
                         <a href="/mint.html?nftAddress=${options.address}&nftId=${NFTWithMetadata[index].token_id}" class="btn btn-sm btn-outline-primary">Mint</a>
-
                     </div>
                 </div>   
                 <br>    
