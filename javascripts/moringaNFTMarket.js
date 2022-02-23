@@ -12,17 +12,17 @@ const $login_message = document.querySelector('#login-message');
 const $userLoggedInSection = document.querySelector('#user-logged-in-section');
 
 //$rinkeby_nftListTBody.innerHTML = "";
-const PRODUCT_NFT_CONTRACT_ADDRESS = '0x2c162dd5d99e93b16c1c9cd17fcb9bd246328553';
 const TARSIER_NFT_CONTRACT_ADDRESS = "0xf3a1473abc511b34db62311f0f83ebf5e83c5eaf";
+const PRODUCT_NFT_CONTRACT_ADDRESS = '0x2c162dd5d99e93b16c1c9cd17fcb9bd246328553';
 const PRODUCT_NFT_CONTRACT_ADDRESS_2 = "0x0A70442b89Bf4e551bff041B133649ffCd5981aa";
-const CONTRACT_NFT_UNKNOWN = "0x421DaDA0810C7Fb13d8348108A01C841e49F28D1";
+const PRODUCT_NFT_CONTRACT_ADDRESS_3 = "0x421DaDA0810C7Fb13d8348108A01C841e49F28D1";
+const PRODUCT_MUMBAI_CONTRACT_ADDRESS = "0xd6f28235889057cdfc6c7853e207a4fdd3a8afd6";
 
 const OPTIONS_TARSIER = { address:TARSIER_NFT_CONTRACT_ADDRESS , chain: "rinkeby"};
 const OPTIONS_PRODUCT = { address: PRODUCT_NFT_CONTRACT_ADDRESS, chain :"rinkeby"};
 const OPTIONS_PRODUCT_2 = { address: PRODUCT_NFT_CONTRACT_ADDRESS_2, chain :"rinkeby"};
-const OPTIONS_PRODUCT_POLYGON_MUMBAI = { address: "0xd6f28235889057cdfc6c7853e207a4fdd3a8afd6", chain :"mumbai"};
-const OPTIONS_CONTRACT_NFT_UNKNOWN = { address:CONTRACT_NFT_UNKNOWN , chain: "rinkeby"};
-
+const OPTIONS_PRODUCT_3 = { address: PRODUCT_NFT_CONTRACT_ADDRESS_3 , chain: "rinkeby"};
+const OPTIONS_PRODUCT_POLYGON_MUMBAI = { address: PRODUCT_MUMBAI_CONTRACT_ADDRESS, chain :"mumbai"};
 
 
 document.querySelector('#btn-login').addEventListener('click', login);
@@ -74,9 +74,9 @@ async function fetchProductNFTMetadata(NFTs){
 
 async function renderNFTList(options){
             //the following code gets Metadata tokens in my contract at the below address on the rikeby network
-            console.log("in renderNFTList");
+            console.log("in renderNFTList, options ", options);
             let parent = document.getElementById("app");
-            console.log(options);
+            //console.log(options);
             let tokenIDs = await Moralis.Web3API.token.getAllTokenIds(options);
             console.log(tokenIDs);
             let tokenArray = tokenIDs.result;
@@ -96,7 +96,11 @@ async function renderNFTList(options){
               NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
             }
           
-            if (options.address.toLowerCase().localeCompare(CONTRACT_NFT_UNKNOWN.toLowerCase()) === 0) {
+            if (options.address.toLowerCase().localeCompare(PRODUCT_NFT_CONTRACT_ADDRESS_3.toLowerCase()) === 0) {
+              NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
+            }
+
+            if (options.address.toLowerCase().localeCompare(PRODUCT_MUMBAI_CONTRACT_ADDRESS.toLowerCase()) === 0) {
               NFTWithMetadata = await fetchProductNFTMetadata(tokenArray);
             }
           
@@ -171,7 +175,7 @@ async function login() {
     
     renderNFTList(OPTIONS_PRODUCT_POLYGON_MUMBAI);
     renderNFTList(OPTIONS_PRODUCT_2);
-    renderNFTList(OPTIONS_CONTRACT_NFT_UNKNOWN);
+    renderNFTList(PRODUCT_NFT_CONTRACT_ADDRESS_3);
 
 
 
