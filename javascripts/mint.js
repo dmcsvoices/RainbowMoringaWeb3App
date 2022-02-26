@@ -42,6 +42,7 @@ async function init(){
     document.querySelector('#submit_mint_eth').addEventListener('click', mint);
     document.querySelector('#submit_mint_poly').addEventListener('click', mintPoly);
     document.querySelector('#submit_transfer').addEventListener('click', transfer);
+    document.querySelector('#submit_burn').addEventListener('click', burnRinkeby);
 
     
 }
@@ -54,7 +55,7 @@ async function mint(){
     console.log(accounts[0]);
 
     let tokenId = parseInt(document.querySelector("#token_id_input").value);
-    let address = document.querySelector("#address_input").value;
+    let address = document.querySelector("#token_address_input").value;
     let tokenAddress = nftAddress;
     let amount = parseInt(document.querySelector("#amount_input").value);
     
@@ -106,7 +107,30 @@ async function transfer(){
     }
     console.log(options);
     let result = await Moralis.transfer(options);    
+}
+
+
+async function burnRinkeby(){
+    console.log("mint");
+    //let web3 = new Web3(Moralis.provider);
+    //let web3Js = new Web3(Moralis.provider);
+    let accounts = await web3Js.eth.getAccounts();
+    console.log(accounts[0]);
+
+    let tokenId = parseInt(document.querySelector("#token_id_input").value);
+    let address = document.querySelector("#token_address_input").value;
+    let tokenAddress = nftAddress;
+    let amount = parseInt(document.querySelector("#amount_input").value);
     
+    const contract = new web3Js.eth.Contract(rinkeyContractAbi,tokenAddress);
+    console.log(contract);
+    contract.methods.mint(address, tokenId, amount).send({from:accounts[0], value: 0})
+        .on("receipt",function(receipt){
+            alert("Mint Done");
+        });
+
+
+//need to make the mint function able to switch between networks
 
 }
 
