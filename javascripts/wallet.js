@@ -288,9 +288,9 @@ async function fetchProductNFTMetadata(NFTs){
 }
 
 
-async function renderNFT(_tokenAddress,_tokenId,_chain){
+async function renderNFT(_tokenAddress,_tokenId,amount, _chain){
 
-  console.log("in renderNFTList",_tokenAddress,_tokenId,_chain);
+  console.log("in renderNFTList amt",_tokenAddress,_tokenId,amount,_chain);
   let thisTokenId = parseInt(_tokenId);
   let options = {address: _tokenAddress,  chain: _chain};
   let tokenIDs = await Moralis.Web3API.token.getAllTokenIds(options);
@@ -325,7 +325,7 @@ async function renderNFT(_tokenAddress,_tokenId,_chain){
                   <h6 class="card-text">Network: ${options.chain}</h6>
                   <h6 class="card-text">Token Address: ${options.address}</h6>
                   <h6 class="card-text">Token Id: ${NFTWithMetadata[0].token_id}</h6>
-                  <h6 class="card-text">Amount: ${NFTWithMetadata[0].amount}</h6>
+                  <h6 class="card-text">Amount: ${amount}</h6>
                   
               </div>
           </div>
@@ -345,7 +345,7 @@ async function renderNFT(_tokenAddress,_tokenId,_chain){
                   <h6 class="card-text">Network: ${options.chain}</h6>
                   <h6 class="card-text">Token Address: ${options.address}</h6>
                   <h6 class="card-text">Token Id: ${NFTWithMetadata[index].token_id}</h6>
-                  <h6 class="card-text">Amount: ${NFTWithMetadata[index].amount}</h6>
+                  <h6 class="card-text">Amount: ${amount}</h6>
                   
               </div>
           </div>   
@@ -380,7 +380,7 @@ async function renderNFT(_tokenAddress,_tokenId,_chain){
         console.log("Getstats: getting rinkeby testnet nfts",testnetNFTsMetaDataArray);
         
         for (let i = 0; i < testnetNFTsMetaDataArray.length; i++) {
-            renderNFT(testnetNFTsMetaDataArray[i].token_address,testnetNFTsMetaDataArray[i].token_id,'rinkeby');
+            renderNFT(testnetNFTsMetaDataArray[i].token_address,testnetNFTsMetaDataArray[i].token_id,testnetNFTsMetaDataArray[i].amount,'rinkeby');
           }
 
 
